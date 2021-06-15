@@ -39,7 +39,7 @@ then
   clear
   echo "Fertig"
   lsblk
-  echo "Steht dort 3 Partitionen bei der Platte $part ? ja/nein"
+  echo "Stehen dort 3 Partitionen bei der Platte $part ? ja/nein"
   read ant
   if ["$ant" == "ja"]
     then
