@@ -23,7 +23,7 @@ echo "============================================="
 if [[ $teil == "a" ]]; then
   echo "Die Partitionierung"
   echo ""
-  lsblk
+  fdisk -l
   echo "Auf welche Festplatte/SSD willst du ArchLinux installieren"
   echo "Es sollte so aussehen: /dev/sda, /dev/nvme0n1, /dev/mmcblk0"
   read part
@@ -39,14 +39,14 @@ if [[ $teil == "a" ]]; then
   	swapsize=$((${swapsize}/1000))"M"
   	sgdisk $part -n=2:0:+${swapsize} -t=2:8200
     echo "Fertig"
-    lsblk
+    fdisk -l
     echo "Stehen dort 2 Partitionen bei der Platte "$part" ? ja/nein"
     read ant
     if [[ $ant == "ja" ]]; then
       clear
       echo "Dann machen wir weiter..."
       echo ""
-      lsblk
+      fdisk -l
       echo "Geben sie bitte die Partition für 'root' ein! /dev/sdXX"
       read root
       mkfs.ext4 $root
@@ -82,14 +82,14 @@ if [[ $teil == "a" ]]; then
     echo ""
     clear
     echo "Fertig"
-    lsblk
+    fdisk -l
     echo "Stehen dort 3 Partitionen bei der Platte "$part" ? ja/nein"
     read ant
     if [[ $ant == "ja" ]]; then
       clear
       echo "Dann machen wir weiter..."
       echo ""
-      lsblk
+      fdisk -l
       echo "Geben sie bitte die Partition für 'root' ein! /dev/sdXX"
       read root
       mkfs.ext4 $root
