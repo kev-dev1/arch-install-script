@@ -2,6 +2,7 @@
 echo "============================================="
 echo "GitHub:   https://github.com/kev-dev1"
 echo "Website:  https://kev-dev1.github.io"
+echo "Script:   https://github.com/kev-dev1/arch-install-script"
 echo ""
 echo "Dieser Script erfordert eine Internetverbindung, weil er die Pakete"
 echo "für die Basis und Desktopoberfläche runterladen tut."
@@ -22,24 +23,64 @@ echo "============================================="
 if ["$teil" == "a"]
 then
   echo "Die Partitionierung"
+  echo ""
   lsblk
   echo "Auf welche Festplatte/SSD willst du ArchLinux installieren"
   echo "Es sollte so aussehen: /dev/sda, /dev/nvme0n1, /dev/mmcblk0"
   read part
+  echo "Hast du ein EFI oder Legacy PC? efi/legacy"
+  echo "Unterschied ist: EFI modern - Legacy alt"
+  read grub
+  if ["$grub" == "legacy"]
+  then
+    echo "Legacy ausgewählt"
+    echo "Root Partition wird erstellt!"
+    sgdisk $part -n=3:0:0
+    echo "SWAP Speicher wird erstellt!"
+    swapsize=$(cat /proc/meminfo | grep MemTotal | awk '{ print $2 }')
+  	swapsize=$((${swapsize}/1000))"M"
+  	sgdisk $part -n=2:0:+${swapsize} -t=2:8200
+    echo "Fertig"
+    lsblk
+    echo "Stehen dort 2 Partitionen bei der Platte "$part" ? ja/nein"
+    read ant
+    if ["$ant" == "ja"]
+      then
+        clear
+        echo "Dann machen wir weiter..."
+        echo ""
+        lsblk
+        echo "Geben sie bitte die Partition für 'root' ein! /dev/sdXX"
+        read root
+        mkfs.ext4 $root
+        mount $root /mnt
+        echo "Geben sie bitte die Partition für 'swap' ein! /dev/sdXX"
+        read swap
+        mkswap $swap
+        swapon $swap
+      elif ["$ant" == "nein"]
+        echo "Bitte starten sie den Script neu oder Partitionieren sie es selber!"
+        echo "Bei Probleme mit dem Script, melden sie es bitte in Github es!"
+      else
+        echo ""
+        echo "Tippfehler"
+      fi
+
+  else ["$grub" == "efi"]
   parted $part mklabel gpt
   echo "EFI Partition wird erstellt!"
   sgdisk $part -n=1:0:+1024M -t=1:ef00
   echo "SWAP Speicher wird erstellt!"
   swapsize=$(cat /proc/meminfo | grep MemTotal | awk '{ print $2 }')
 	swapsize=$((${swapsize}/1000))"M"
-	sgdisk ${device} -n=2:0:+${swapsize} -t=2:8200
+	sgdisk $part -n=2:0:+${swapsize} -t=2:8200
   echo "Root Partition wird erstellt!"
   sgdisk $part -n=3:0:0
   echo ""
   clear
   echo "Fertig"
   lsblk
-  echo "Stehen dort 3 Partitionen bei der Platte $part ? ja/nein"
+  echo "Stehen dort 3 Partitionen bei der Platte "$part" ? ja/nein"
   read ant
   if ["$ant" == "ja"]
     then
@@ -66,6 +107,8 @@ then
     else
       echo ""
       echo "Tippfehler"
+    fi
+  fi
 
       pacstrap /mnt base base-devel linux linux-firmware nano dhcpcd bash-completion wpa_supplicant netctl dialog lvm2
       echo ""
@@ -82,7 +125,6 @@ then
       fi
     genfstab -Up /mnt > /mnt/etc/fstab
     arch-chroot /mnt
-  fi
 
 elif ["$teil" == "b"]
 then
