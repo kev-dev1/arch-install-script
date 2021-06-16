@@ -5,5 +5,5 @@ Dieser Script soll die Installation von ArchLinux vereinfachen. Der hat die nöt
 
 Die "aur-install.sh" sollte aber nur nach dem Neustart und fertig einrichtung gestartet werden und ist auch nur "Optional", also keine Pflicht!
 
-!WARNUNG! Aktuell ist der "arch-install.sh" Script in der [BETA], es kann dazu kommen das er auch fehlerhaft ist und nicht richtig Funktionieren wird.
-<b>!!Deshalb ist die Nutzung auf eigene Gefahr!!</b>
+<b>!!WARNUNG!! Aktuell ist der "arch-install.sh" Script in der [BETA], es kann dazu kommen das er auch fehlerhaft ist und nicht richtig Funktionieren wird.
+!!Deshalb ist die Nutzung auf eigene Gefahr!!</b>
