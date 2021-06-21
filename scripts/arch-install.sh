@@ -15,7 +15,7 @@ echo "Enter drücken oder abbrechen"
 read n
 echo "Dieser Script ist auf 2 Teile gegliedert:"
 echo "Teil 'a' wird Partitionierung als auch die Basis eingerichtet."
-echo "Teil 'b' ist im chmod aktiv. (!Script neu starten!)"
+echo "Teil 'b' ist im chroot aktiv. (!Script neu starten!)"
 echo ""
 echo "Welcher Teil soll möchtest du machen? a/b"
 read teil
@@ -117,6 +117,7 @@ if [[ $teil == "a" ]]; then
     fi
 
   pacstrap /mnt base base-devel linux linux-firmware nano dhcpcd bash-completion wpa_supplicant netctl dialog lvm2
+
   echo ""
   echo "Hast du ein Intel oder AMD CPU verbaut? intel/amd"
   read cpu
@@ -131,96 +132,3 @@ if [[ $teil == "a" ]]; then
 
   genfstab -Up /mnt > /mnt/etc/fstab
   arch-chroot /mnt
-
-elif [[ $teil == "b" ]]; then
-  echo "Wie soll dein PC heißen?"
-  read pcname
-  echo "$pcname" > etc/hostname
-  echo LANG=de_DE.UTF-8 > /etc/locale.conf
-  echo de_DE.UTF-8 > /etc/locale.gen
-  locale-gen
-  echo KEYMAP=de-latin1 > /etc/vconsole.conf
-  echo FONT=lat9w-16 >> /etc/vconsole.conf
-  ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
-  pacman -Sy
-  mkinitcpio -p linux
-  echo "passwort für 'root'"
-  passwd
-  echo ""
-  echo "Wie soll der User heißen?"
-  read user
-  useradd -m -g users -s /bin/bash "$user"
-  echo Passwort für $user
-  passwd $user
-  pacman -S sudo
-  echo $user  ALL=(ALL) ALL >> /etc/sudoers
-  gpasswd -a "$ant" wheel
-  gpasswd -a "$ant" games
-  gpasswd -a "$ant" audio
-  gpasswd -a "$ant" video
-  systemctl enable --now fstrim.timer
-  pacman -S acpid dbus avahi cups cronie
-  systemctl enable acpid
-  systemctl enable avahi-daemon
-  systemctl enable org.cups.cupsd.service
-  systemctl enable --now cronie
-  systemctl enable --now systemd-timesyncd.service
-  date
-  hwclock -w
-  date
-  pacman -S xorg-server xorg-xinit
-  echo "Welcher Grafiktreiber soll installiert werden? ;)"
-  echo "Für Nvidia Grafikkarten: (nvidia)"
-  echo "Für AMD Grafikarten (xf86-video-amdgpu und amdvlk)"
-  echo "Intel ist Standartmaeßig installiert"
-  echo "Enter drücken falls kein Treiber installiert werden soll."
-  read gpu
-  pacman -S "$gpu"
-  localectl set-x11-keymap de pc105 nodeadkeys
-  pacman -S ttf-dejavu
-  echo ""
-  clear
-  echo ""
-  echo "Jetzt wird die Desktopoberfläche installert..."
-  echo "Es gibst zur Auswahl: GNOME, KDE, XFCE(empfohlen)"
-  echo "Welche Oberfläche willst du haben? gnome/kde/xfce"
-  read deskenv
-  if [[ $deskenv == "gnome" ]]; then
-    echo "GNOME wird installert!"
-    pacman -S gnome gnome-extra gdm pipewire pipewire-pulse pipewire-alsa piewire-jack pipewire-media-session networkmanager gnome-software-packagekit-plugin flatpak
-    systemctl enable gdm
-    systemctl enable NetworkManager.service
-  elif [[ $deskenv == "kde" ]]; then
-    echo "KDE wird installert!"
-    pacman -S plasma kde-applications sddm pipewire pipewire-pulse pipewire-alsa piewire-jack pipewire-media-session networkmanager packagekit-qt5 flatpak
-    systemctl enable sddm
-    systemctl enable NetworkManager.service
-  elif [[ $deskenv == "xfce" ]]; then
-    echo "XFCE wird installert!"
-    pacman -S xfce4 xfce4-goodies lightdm networkmanager network-manager-applet lightdm-gtk-greeter lightdm-gtk-greeter-settings pipewire pipewire-pulse pipewire-alsa piewire-jack pipewire-media-session pavucontrol xfce4-whiskermenu-plugin
-    systemctl enable lightdm
-    systemctl enable NetworkManager.service
-  else
-    echo "Desktop umgebung wird nicht mit installiert."
-  fi
-  echo "Willst du auch die Standard Programme installieren (empfohlen)"
-  echo "Es beinhaltet denn Firefox(Internet), Thunderbird(Email), VLC/MPV(Multimedia)"
-  echo "Libreoffice(Office), Fonts und usw. Es erspart auch die unötigen installationen."
-  echo "ja/nein"
-  read standpro
-  if [[ $standpro == "ja" ]]; then
-    pacman -S firefox firefox-i18n-de thunderbird thunderbird-i18n-de libreoffice-fresh vlc mpv jre8-openjdk unzip git wget xz p7zip ufw iptables adobe-source-sans-pro-fonts aspell-de hunspell-de languagetool libmythes mythes-de ttf-anonymous-pro ttf-bitstream-vera ttf-dejavu ttf-droid ttf-liberation ttf-ubuntu-font-family
-  elif [[ $standpro == "nein" ]]; then
-    echo "Standard Programme werden nicht installiert!"
-  fi
-
-  echo "Du hast ArchLinux erfolgreich installiert!"
-  echo "Ich hoff dass es dir gefallen wird..."
-  echo "und Vielen Dank zur Nutzung meines Script´s"
-  echo "MFG Kev-Dev1"
-  echo "PS: Es gibt noch ein Script wo Yay installiert wird!"
-  read a
-
-else
-  echo "Tippfehler, bitte korrigieren!!"
-fi
