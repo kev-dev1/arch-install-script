@@ -12,8 +12,8 @@ echo ""
 echo "Dieser Script ist aktuell noch in der [Beta]"
 echo "Deshalb kann es auch zur Problemen kommen!"
 echo ""
-echo "Wenn du einverstanden bist damit..."
-echo "drück Enter oder mit 'Strg + C' abbrechen!"
+echo "Wenn du damit einverstanden bist, bitte auf"
+echo "Enter drücken oder mit (Strg+C) abbrechen"
 read n
 echo "============================================="
 clear
