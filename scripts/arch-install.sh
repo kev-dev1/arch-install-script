@@ -29,7 +29,7 @@ read pctype
 if [[ $pctype == "legacy" ]]; then
   echo "Legacy ausgewählt"
   echo "Root Partition wird erstellt!"
-  sgdisk $part -n=3:0:0
+  sgdisk /dev/$part -n=3:0:0
   echo "SWAP Speicher wird erstellt!"
   swapsize=$(cat /proc/meminfo | grep MemTotal | awk '{ print $2 }')
   swapsize=$((${swapsize}/1000))"M"
@@ -37,15 +37,15 @@ if [[ $pctype == "legacy" ]]; then
   echo "Fertig"
 elif [[ $pctype == "efi" ]]; then
   echo "EFI ausgewählt"
-  parted $part mklabel gpt
+  parted /dev/$part mklabel gpt
   echo "EFI Partition wird erstellt!"
-  sgdisk $part -n=1:0:+1024M -t=1:ef00
+  sgdisk /dev/$part -n=1:0:+1024M -t=1:ef00
   echo "SWAP Speicher wird erstellt!"
   swapsize=$(cat /proc/meminfo | grep MemTotal | awk '{ print $2 }')
   swapsize=$((${swapsize}/1000))"M"
-  sgdisk $part -n=2:0:+${swapsize} -t=2:8200
+  sgdisk /dev/$part -n=2:0:+${swapsize} -t=2:8200
   echo "Root Partition wird erstellt!"
-  sgdisk $part -n=3:0:0
+  sgdisk /dev/$part -n=3:0:0
   echo ""
   clear
   echo "Fertig"
@@ -63,22 +63,22 @@ if [[ $parted == "ja" ]]; then
   fdisk -l
   echo "Geben sie bitte die Partition für 'root' ein! /dev/sdXX"
   read root
-  mkfs.ext4 $root
-  mount $root /mnt
+  mkfs.ext4 /dev/$root
+  mount /dev/$root /mnt
   echo "Ihr 'root' Partition ist '/dev/$root'"
   echo ""
   echo "Geben sie bitte die Partition für 'boot' ein! /dev/sdXX"
   echo "Gilt bei 'EFI' nur, normal bleibt er in root drin."
   read boot
-  mkfs.fat -F32 $boot
+  mkfs.fat -F32 /dev/$boot
   mkdir /mnt/boot/
-  mount $boot /mnt/boot/
+  mount /dev/$boot /mnt/boot/
   echo "Ihr 'boot' Partition ist '/dev/$boot'"
   echo ""
   echo "Geben sie bitte die Partition für 'swap' ein! /dev/sdXX"
   read swap
-  mkswap $swap
-  swapon $swap
+  mkswap /dev/$swap
+  swapon /dev/$swap
   echo "Ihr 'swap' Partition ist '/dev/$swap'"
 elif [[ $parted == "nein" ]]; then
   echo "Bitte starten sie den Script neu oder Partitionieren sie es selber!"
@@ -97,7 +97,7 @@ if [[ $grub == "legacy" ]]; then
   echo "Legacy wurde ausgewählt!"
   echo "Grub wird installiert..."
   pacman -S grub
-  grub-install $root
+  grub-install /dev/$root
   break
   grub-mkconfig -o /boot/grub/grub.cfg
 elif [[ $grub == "efi" ]]; then
