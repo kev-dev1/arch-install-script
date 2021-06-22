@@ -87,32 +87,8 @@ else
   echo ""
   echo "Tippfehler"
 fi
-clear
-echo "Jetzt wird Grub installiert, dabei wird nochmal gefragt..."
-echo "Hast du ein EFI oder Legacy PC? efi/legacy"
-echo "Unterschied ist: EFI modern - Legacy alt"
-read grub
-if [[ $grub == "legacy" ]]; then
-  echo ""
-  echo "Legacy wurde ausgewählt!"
-  echo "Grub wird installiert..."
-  pacman -S grub
-  grub-install /dev/$root
-  break
-  grub-mkconfig -o /boot/grub/grub.cfg
-elif [[ $grub == "efi" ]]; then
-  echo ""
-  echo "EFI wurde ausgewählt!"
-  echo "Grub wird installiert..."
-  pacman -S grub efibootmgr
-  grub-install --target=x86_64-efi --efi-directory=/boot/
-  break
-  grub-mkconfig -o /boot/grub/grub.cfg
-else
-  echo ""
-  echo "Tippfehler, nochmal bitte!"
-fi
 
+clear
 echo "Die ArchLinux Base wird installiert..."
 pacstrap /mnt base base-devel linux linux-firmware nano dhcpcd bash-completion wpa_supplicant netctl dialog lvm2 -y
 echo ""

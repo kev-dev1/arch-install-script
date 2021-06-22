@@ -30,6 +30,7 @@ echo LANG=$locale > /etc/locale.conf
 echo "Sie haben die Locale $locale ausgewählt!"
 echo "Bei diesem Punkt musst du denn gewünschte Sprache auskommentieren!"
 echo "Beispiel: '#de_DE.UTF-8 zu de_DE.UTF-8'"
+read n
 nano /etc/locale.gen
 locale-gen
 echo "Tastaturlayout wird konfiguriert!"
@@ -47,6 +48,35 @@ read timezone
 ln -sf /usr/share/zoneinfo/$timezone /etc/localtime
 echo "Fertig, sie haben $timezone eingegeben!"
 echo ""
+echo "Jetzt wird Grub installiert"
+echo "Hast du ein EFI oder Legacy PC? efi/legacy"
+echo "Unterschied ist: EFI modern - Legacy alt"
+read grub
+if [[ $grub == "legacy" ]]; then
+  echo ""
+  echo "Legacy wurde ausgewählt!"
+  fdisk -l
+  echo "Bitte wählen sie ihre Root Partition aus!"
+  read root
+  echo "Sie haben $root ausgewählt!"
+  echo "Grub wird installiert..."
+  pacman -S grub
+  grub-install /dev/$root
+  break
+  grub-mkconfig -o /boot/grub/grub.cfg
+elif [[ $grub == "efi" ]]; then
+  echo ""
+  echo "EFI wurde ausgewählt!"
+  echo "Grub wird installiert..."
+  pacman -S grub efibootmgr
+  grub-install --target=x86_64-efi --efi-directory=/boot
+  break
+  grub-mkconfig -o /boot/grub/grub.cfg
+else
+  echo ""
+  echo "Tippfehler, nochmal bitte!"
+fi
+
 pacman -Sy
 mkinitcpio -p linux
 echo "passwort für 'root'"
@@ -97,17 +127,17 @@ echo "Welche Oberfläche willst du haben? gnome/kde/xfce"
 read deskenv
 if [[ $deskenv == "gnome" ]]; then
   echo "GNOME wird installert!"
-  pacman -S gnome gnome-extra gdm pipewire pipewire-pulse pipewire-alsa piewire-jack pipewire-media-session networkmanager gnome-software-packagekit-plugin flatpak fwupd -y
+  pacman -S gnome gnome-extra gdm pipewire pipewire-pulse pipewire-alsa pipewire-jack pipewire-media-session networkmanager gnome-software-packagekit-plugin flatpak fwupd -y
   systemctl enable gdm
   systemctl enable NetworkManager.service
 elif [[ $deskenv == "kde" ]]; then
   echo "KDE wird installert!"
-  pacman -S plasma kde-applications sddm pipewire pipewire-pulse pipewire-alsa piewire-jack pipewire-media-session networkmanager packagekit-qt5 flatpak fwupd-y
+  pacman -S plasma kde-applications sddm pipewire pipewire-pulse pipewire-alsa pipewire-jack pipewire-media-session networkmanager packagekit-qt5 flatpak fwupd-y
   systemctl enable sddm
   systemctl enable NetworkManager.service
 elif [[ $deskenv == "xfce" ]]; then
   echo "XFCE wird installert!"
-  pacman -S xfce4 xfce4-goodies lightdm networkmanager network-manager-applet lightdm-gtk-greeter lightdm-gtk-greeter-settings pipewire pipewire-pulse pipewire-alsa piewire-jack pipewire-media-session pavucontrol xfce4-whiskermenu-plugin fwupd -y
+  pacman -S xfce4 xfce4-goodies lightdm networkmanager network-manager-applet lightdm-gtk-greeter lightdm-gtk-greeter-settings pipewire pipewire-pulse pipewire-alsa pipewire-jack pipewire-media-session pavucontrol xfce4-whiskermenu-plugin fwupd -y
   systemctl enable lightdm
   systemctl enable NetworkManager
 else

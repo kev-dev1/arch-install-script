@@ -9,7 +9,6 @@ echo "dabei wird auch pamac installiert"
 echo ""
 "============================================="
 echo "Yay wird installiert!"
-pacman -S --needed git base-devel -y
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
