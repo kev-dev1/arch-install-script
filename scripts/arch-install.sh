@@ -114,16 +114,16 @@ else
 fi
 
 echo "Die ArchLinux Base wird installiert..."
-pacstrap /mnt base base-devel linux linux-firmware nano dhcpcd bash-completion wpa_supplicant netctl dialog lvm2
+pacstrap /mnt base base-devel linux linux-firmware nano dhcpcd bash-completion wpa_supplicant netctl dialog lvm2 -y
 echo ""
 echo "Hast du ein Intel oder AMD CPU verbaut? intel/amd"
 read cpu
 if [[ $cpu == "intel" ]]; then
   echo "Intel CPU wurde ausgewählt!"
-  pacman --root /mnt -S intel-ucode
+  pacman --root /mnt -S intel-ucode -y
 elif [[ $cpu == "amd" ]]; then
   echo "AMD CPU wurde ausgewählt"
-  pacman --root /mnt -S amd-ucode
+  pacman --root /mnt -S amd-ucode -y
 else
   echo ""
   echo "Tippfehler, nochmal bitte!"

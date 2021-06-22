@@ -17,20 +17,20 @@ read n
 echo "Dieser Script ist auf 3 Teile gegliedert:"
 echo "Teil 'a' wird Partitionierung als auch die Basis installiert."
 echo "Teil 'b' ist im chroot aktiv. (Nochmal runterladen per GIT und starten)"
-echo "Teil 'c' wird die Arch-Aur-Packetmanager aktiviert und installiert. "
+echo "Teil 'c' wird die Arch-Aur-Packetmanager aktiviert und installiert. (Optional)"
 echo ""
 echo "Welcher Teil soll möchtest du machen? a/b/c"
 read teil
 echo "============================================="
 if [[ $teil == "a" ]]; then
   clear
-  bash ~/$destDIR/arch-install.sh
+  bash $destDIR/arch-install.sh
 elif [[ $teil == "b" ]]; then
   clear
-  bash ~/$destDIR/pre-install.sh
+  bash $destDIR/pre-install.sh
 elif [[ $teil == "c" ]]; then
   clear
-  bash ~/$destDIR/aur-install.sh
+  bash $destDIR/aur-install.sh
 else
   echo ""
   echo "Tippfehler, nochmal eingeben!"
