@@ -127,19 +127,22 @@ echo "Welche Oberfläche willst du haben? gnome/kde/xfce"
 read deskenv
 if [[ $deskenv == "gnome" ]]; then
   echo "GNOME wird installert!"
-  pacman -S gnome gnome-extra gdm pipewire pipewire-pulse pipewire-alsa pipewire-jack pipewire-media-session networkmanager gnome-software-packagekit-plugin flatpak fwupd -y
+  pacman -S gnome gnome-extra gdm pipewire pipewire-pulse pipewire-alsa pipewire-jack pipewire-media-session networkmanager gnome-software-packagekit-plugin flatpak fwupd bluez bluez-utils -y
   systemctl enable gdm
-  systemctl enable NetworkManager.service
+  systemctl enable NetworkManager
+  systemctl enable bluetooth
 elif [[ $deskenv == "kde" ]]; then
   echo "KDE wird installert!"
-  pacman -S plasma kde-applications sddm pipewire pipewire-pulse pipewire-alsa pipewire-jack pipewire-media-session networkmanager packagekit-qt5 flatpak fwupd-y
+  pacman -S plasma kde-applications sddm pipewire pipewire-pulse pipewire-alsa pipewire-jack pipewire-media-session networkmanager packagekit-qt5 flatpak fwupd bluez bluez-utils -y
   systemctl enable sddm
-  systemctl enable NetworkManager.service
+  systemctl enable NetworkManager
+  systemctl enable bluetooth
 elif [[ $deskenv == "xfce" ]]; then
   echo "XFCE wird installert!"
-  pacman -S xfce4 xfce4-goodies lightdm networkmanager network-manager-applet lightdm-gtk-greeter lightdm-gtk-greeter-settings pipewire pipewire-pulse pipewire-alsa pipewire-jack pipewire-media-session pavucontrol xfce4-whiskermenu-plugin fwupd -y
+  pacman -S xfce4 xfce4-goodies lightdm networkmanager network-manager-applet lightdm-gtk-greeter lightdm-gtk-greeter-settings pipewire pipewire-pulse pipewire-alsa pipewire-jack pipewire-media-session pavucontrol xfce4-whiskermenu-plugin fwupd bluez bluez-utils blueberry libcanberra sound-theme-freedesktop -y
   systemctl enable lightdm
   systemctl enable NetworkManager
+  systemctl enable bluetooth
 else
   echo ""
   echo "Es wird keine Desktopoberfläche installiert!"
