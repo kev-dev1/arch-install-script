@@ -1,4 +1,4 @@
-Arch Installer [BETA]
+# Arch Installer [BETA]
 
 Dieser Script soll die Installation von Arch-Linux vereinfachen. Der hat die nötigen Schritte die von der Partitionierung bis hin zu installation der Standard Programmen. Dabei ist auch ein Script dabei der die Arch-AUR-Repository aktiviert.
 
