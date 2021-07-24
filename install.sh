@@ -20,8 +20,8 @@ echo "Teil 'b' ist im chroot aktiv. (Nochmal runterladen per GIT und starten)"
 echo "Teil 'c' wird die Arch-Aur-Packetmanager aktiviert und installiert. (Optional)"
 echo ""
 echo "Welcher Teil soll möchtest du machen? a/b/c"
-read teil
 echo "============================================="
+read teil
 if [[ $teil == "a" ]]; then
   clear
   bash $destDIR/arch-install.sh
