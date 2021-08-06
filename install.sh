@@ -1,4 +1,5 @@
 #!/bin/bash
+clear
 destDIR="scripts"
 echo "============================================="
 echo "GitHub:   https://github.com/kev-dev1"
@@ -14,6 +15,9 @@ echo ""
 echo "Wenn du damit einverstanden bist, bitte auf"
 echo "Enter drücken oder abbrechen"
 read n
+clear
+echo "============================================="
+echo ""
 echo "Dieser Script ist auf 3 Teile gegliedert:"
 echo "Teil 'a' wird Partitionierung als auch die Basis installiert."
 echo "Teil 'b' ist im chroot aktiv. (Nochmal runterladen per GIT und starten)"
