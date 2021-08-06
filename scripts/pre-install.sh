@@ -44,6 +44,7 @@ echo "Bei diesem Punkt musst du denn gewünschte Sprache auskommentieren!"
 echo "Beispiel: '#de_DE.UTF-8 zu de_DE.UTF-8'"
 read n
 nano /etc/locale.gen
+clear
 locale-gen
 echo ""
 
@@ -87,6 +88,7 @@ if [[ $grub == "legacy" ]]; then
   clear
   echo ""
   echo "Legacy wurde ausgewählt!"
+  echo ""
   fdisk -l
   echo ""
   echo "Bitte wählen sie ihre Root Partition aus!"
@@ -96,7 +98,7 @@ if [[ $grub == "legacy" ]]; then
   echo "Sie haben $root ausgewählt!"
   echo ""
   echo "Grub wird installiert..."
-  pacman -S grub os-prober
+  pacman -S grub os-prober -y
   grub-install /dev/$root
   grub-mkconfig -o /boot/grub/grub.cfg
 elif [[ $grub == "efi" ]]; then
@@ -105,7 +107,7 @@ elif [[ $grub == "efi" ]]; then
   echo "EFI wurde ausgewählt!"
   echo ""
   echo "Grub wird installiert..."
-  pacman -S grub efibootmgr os-prober
+  pacman -S grub efibootmgr os-prober -y
   grub-install --target=x86_64-efi --efi-directory=/boot
   grub-mkconfig -o /boot/grub/grub.cfg
 else
