@@ -14,6 +14,8 @@ echo "Wenn du damit einverstanden bist, bitte auf"
 echo "Enter drücken oder mit (Strg+C) abbrechen"
 echo "============================================="
 read n
+
+# Select Disk
 clear
 echo ""
 echo "Die Partitionierung"
@@ -25,6 +27,9 @@ echo "Es sollte so aussehen: /dev/(sda), /dev/(nvme0n1), /dev/(mmcblk0)"
 echo "Bitte nur die im Klammer sind eingeben"
 echo ""
 read part
+
+# Partition Typ and Partition create
+clear
 echo ""
 echo "Hast du ein EFI oder Legacy PC? efi/legacy"
 echo "Unterschied ist: EFI modern - Legacy alt"
@@ -64,6 +69,7 @@ else
   echo "Tippfehler, nochmal eingeben!"
 fi
 
+# Select Partition
 clear
 echo ""
 fdisk -l
@@ -72,6 +78,7 @@ echo "Stehen dort gewisse Partitionen bei der Platte '/dev/$part' ? ja/nein"
 echo ""
 read parted
 if [[ $parted == "ja" ]]; then
+  clear
   echo ""
   echo "Dann machen wir weiter..."
   echo ""
@@ -110,20 +117,28 @@ else
   echo "Tippfehler"
 fi
 
+# Install ArchLinux
 clear
-echo "Die ArchLinux Base wird installiert..."
+echo ""
+echo "Die Arch-Linux Basis wird installiert..."
 echo ""
 pacstrap /mnt base base-devel linux linux-firmware nano dhcpcd bash-completion wpa_supplicant netctl dialog lvm2 -y
+echo ""
+
+# CPU Select and Install
+clear
 echo ""
 echo "Hast du ein Intel oder AMD CPU verbaut? intel/amd"
 echo ""
 read cpu
 if [[ $cpu == "intel" ]]; then
+  clear
   echo ""
   echo "Intel CPU wurde ausgewählt!"
   echo ""
   pacman --root /mnt -S intel-ucode -y
 elif [[ $cpu == "amd" ]]; then
+  clear
   echo ""
   echo "AMD CPU wurde ausgewählt"
   echo ""
@@ -133,7 +148,9 @@ else
   echo "Tippfehler, nochmal bitte!"
 fi
 
+# Partitiontable and Archroot
 clear
+echo ""
 echo "Die Partitiontabelle werden erstellt"
 genfstab -Up /mnt > /mnt/etc/fstab
 echo ""
@@ -145,12 +162,14 @@ echo "Sind die Partitionen richtig drin eingetragen? ja/nein"
 echo ""
 read fspart
 if [[ $fspart == "ja" ]]; then
+  clear
   echo ""
   echo "Sie werden jetzt in den Arch-chroot gebracht, bitte laden sie den Script..."
   echo "erneurt herunter und starten sie 'Teil b' für weitere einrichtungen."
   echo ""
   arch-chroot /mnt
 elif [[ $fspart == "nein" ]]; then
+  clear
   echo ""
   echo "Wiederholen sie den Script neu"
   echo "oder melden sie es in GitHub es Bitte"
